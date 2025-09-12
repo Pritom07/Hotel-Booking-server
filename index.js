@@ -26,9 +26,19 @@ async function run() {
       .collection("bookings");
 
     app.get("/rooms", async (req, res) => {
+      const page = parseInt(req.query.page);
+      const size = parseInt(req.query.size);
       const cursor = roomsCollection.find();
-      const result = await cursor.toArray();
+      const result = await cursor
+        .skip(page * size)
+        .limit(size)
+        .toArray();
       res.send(result);
+    });
+
+    app.get("/totDocument", async (req, res) => {
+      const totDocument = await roomsCollection.estimatedDocumentCount();
+      res.send(totDocument);
     });
 
     console.log(
