@@ -48,6 +48,12 @@ async function run() {
       res.send(result);
     });
 
+    app.post("/rooms", async (req, res) => {
+      const roomData = req.body;
+      const result = await roomsCollection.insertOne(roomData);
+      res.send(result);
+    });
+
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
