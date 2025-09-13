@@ -54,7 +54,7 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/rooms/edit_room/:id", async (req, res) => {
+    app.get("/rooms/:id", async (req, res) => {
       const roomID = req.params.id;
       const query = { _id: new ObjectId(roomID) };
       const result = await roomsCollection.findOne(query);
@@ -81,6 +81,20 @@ async function run() {
       };
       const result = await roomsCollection.updateOne(filter, updateDoc);
       res.send(result);
+    });
+
+    app.post("/bookroom", async (req, res) => {
+      const roomBookData = req.body;
+      const roomID = roomBookData.roomId;
+      const filter = { _id: new ObjectId(roomID) };
+      const updateDoc = {
+        $set: {
+          available: false,
+        },
+      };
+      const updatedResult = await roomsCollection.updateOne(filter, updateDoc);
+      const postedResult = await bookingsCollection.insertOne(roomBookData);
+      res.send(postedResult);
     });
 
     console.log(
