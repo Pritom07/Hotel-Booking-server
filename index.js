@@ -54,6 +54,35 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/rooms/edit_room/:id", async (req, res) => {
+      const roomID = req.params.id;
+      const query = { _id: new ObjectId(roomID) };
+      const result = await roomsCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.patch("/rooms/udpateRoom/:id", async (req, res) => {
+      const roomID = req.params.id;
+      const updatedData = req.body;
+      const pricePerNight = updatedData.pricePerNight;
+      const beds = updatedData.beds;
+      const description = updatedData.description;
+      const type = updatedData.type;
+      const available = updatedData.available;
+      const filter = { _id: new ObjectId(roomID) };
+      const updateDoc = {
+        $set: {
+          pricePerNight,
+          beds,
+          description,
+          type,
+          available,
+        },
+      };
+      const result = await roomsCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
